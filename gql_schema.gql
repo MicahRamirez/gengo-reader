@@ -1,0 +1,33 @@
+enum SUPPORTED_READINGS {
+  NHK_NEWS_WEB_EASY
+}
+
+type Question {
+
+}
+
+type Vocabulary {
+
+}
+
+type Reading {
+  discussion_questions: [Question]!
+  vocab: [Vocabulary]!
+  reading_type: SUPPORTED_READINGS!
+  reading_url: String!
+  data: ReadingData!
+}
+
+type ReadingData {
+  text: String!
+  title: String!
+  tokens: TokenMap
+}
+
+type Student {
+  readings: [Reading]!
+  teachers: [Teacher]!
+  firstName: String!
+  lastName: String!
+  email: String!
+}
