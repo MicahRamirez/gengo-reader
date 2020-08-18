@@ -1,25 +1,25 @@
-# Next.js with TypeScript example
+# App to make the process of reviewing foreign language articles between student and teacher easier and more interactive
 
-## How to use
+# Components
 
-Download the example [or clone the repo](https://github.com/mui-org/material-ui):
+- React (NextJS) + Material UI on Vercel Serverless
+- GQL Interface to Datastore in FaunaDB (https://fauna.com/)
+- Python (Fast)Api: Article Parser using Python Scrapy on Vercel Serverless
+- Auth provided by FaunaDB Auth Capabilities
+- (Stretch) Tokenizer Service most likely on AWS Fargate (Tokenizer requires specific system deps so can't be ran in severless environ)
+- (Stretch) Chat Service
 
-```sh
-curl https://codeload.github.com/mui-org/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/nextjs-with-typescript
-cd nextjs-with-typescript
-```
+# Typedefs for Data
 
-Install it and run:
+# Python Article Parser HOW-TO
 
-```sh
-npm install
-npm run dev
-```
+Python dev workflow relies on pipenv https://pipenv-fork.readthedocs.io/en/latest/
+pipenv works very similar to familiar tool sets like yarn and npm while simultaneously utilizing important python dev workflow concepts virtualenvs etc
 
-or:
+### Testing and working on an article scraper
 
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mui-org/material-ui/tree/master/examples/nextjs-with-typescript)
+1. `pipenv shell`
+2. `scrapy shell <DESIRED_URL>`
+3. Use scrapy selectors to testing parsing the desired article
 
-## The idea behind the example
-
-[Next.js](https://github.com/zeit/next.js) is a framework for server-rendered React apps.
+Uses Scrapy https://docs.scrapy.org/en/latest/

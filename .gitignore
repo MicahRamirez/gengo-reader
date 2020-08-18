@@ -1,3 +1,5 @@
 .DS_Store
 .next/
 node_modules/
+*.py[cod]     # Will match .pyc, .pyo and .pyd files.
+api/__pycache__/  # Exclude the whole folder

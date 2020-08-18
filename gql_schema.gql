@@ -3,30 +3,40 @@ enum SUPPORTED_READINGS {
 }
 
 type Question {
-
+  question: String!
+  answer: String!
+  discussion_questions: [Reading]! @relation(name: "discussion_questions")
 }
 
 type Vocabulary {
-
+  word: String!
+  definition: String
+  discussion_questions: [Reading]! @relation(name: "discussion_vocab")
 }
 
 type Reading {
-  discussion_questions: [Question]!
-  vocab: [Vocabulary]!
+  discussion_questions: [Question]! @relation(name: "discussion_questions")
+  vocab: [Vocabulary]! @relation(name: "discussion_vocab")
   reading_type: SUPPORTED_READINGS!
   reading_url: String!
-  data: ReadingData!
-}
-
-type ReadingData {
   text: String!
   title: String!
-  tokens: TokenMap
+  teachers: [Teacher]! @relation(name: "teacher_assignments")
+  students: [Student]! @relation(name: "student_readings")
+  # tokens: TokenMap TODO Tokenize the scraped article
+}
+
+type Teacher {
+  students: [Student]! @relation(name: "assigned_to")
+  firstName: String!
+  lastName: String!
+  email: String!
+  readings: [Reading]! @relation(name: "teacher_assignments")
 }
 
 type Student {
-  readings: [Reading]!
-  teachers: [Teacher]!
+  readings: [Reading]! @relation(name: "student_readings")
+  teachers: [Teacher]! @relation(name: "assigned_to")
   firstName: String!
   lastName: String!
   email: String!
