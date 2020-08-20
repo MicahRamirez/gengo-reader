@@ -16,6 +16,9 @@
 Python dev workflow relies on pipenv https://pipenv-fork.readthedocs.io/en/latest/
 pipenv works very similar to familiar tool sets like yarn and npm while simultaneously utilizing important python dev workflow concepts virtualenvs etc
 
+Running backend service
+`uvicorn main:app -reload`
+
 ### Testing and working on an article scraper
 
 1. `pipenv shell`

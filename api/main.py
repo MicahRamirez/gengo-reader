@@ -1,10 +1,14 @@
 
-from fastapi import FastAPI
+import os
+from fastapi import FastAPI, Response, status
 from pydantic import BaseModel
-from datetime import date
-from . import nhk_spider
+import requests
+from bs4 import BeautifulSoup
+from faunadb import query as q
+from faunadb.objects import Ref
+from faunadb.client import FaunaClient
 
-import scrapy
+
 app = FastAPI()
 
 
@@ -12,22 +16,32 @@ class ReadingReference(BaseModel):
     url: str
 
 
-class Reading(BaseModel):
-    url: str
-    title: str
-    text: str
-    published_at: date
-
-
-class ScrapedNHKArticle(Reading):
-    token_map: dict
-
-
 NHK_PREFIX = 'https://www3.nhk.or.jp/news/easy/'
+faunadb_secret = os.getenv('FAUNADB_SECRET')
+client = FaunaClient(secret=faunadb_secret)
 
 
-@app.post("/scrape")
-async def scrape_article(article: ReadingReference):
+@app.post("/scrape", status_code=200)
+async def scrape_article(article: ReadingReference, response: Response):
     if NHK_PREFIX in article.url:
-        test = '1'
-    return 'hello world'
+        try:
+            # see if an article exists
+            client.query(q.get(
+                q.match(q.index('reading_by_url'), article.url)))
+            return {"success": True, "status": "DocumentExisted"}
+        except:
+            # scrape article and save
+            article = requests.get(article.url)
+            soup = BeautifulSoup(article.content, 'html.parser')
+            article_body_text = soup.find(
+                class_='article-main__body').get_text()
+            article_title_text = soup.find(
+                class_='article-main__title').get_text()
+            client.query(q.create(q.collection('Reading'), {
+                "data": {"reading_url": article.url, "article_title": article_title_text, "text": article_body_text}
+            }))
+            response.status_code = status.HTTP_201_CREATED
+            return {"success": True, "status": "CreatedDocument"}
+    else:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"success": False, "status": "UnknownArticleType"}
