@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "94bf6a9865866cc840e8d3dc70789e1e29acf55e53c2df08691a9dfa03f5d445"
+            "sha256": "28fcee9152164b1c80dc2fcd9a0a3d879346b9a90aa91fa6aff2a8df4fffcb7a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -134,6 +134,14 @@
             ],
             "markers": "python_version < '3.7'",
             "version": "==0.7"
+        },
+        "fastapi": {
+            "hashes": [
+                "sha256:29c12dd0d4ac825d13c2db4762d2863281c18085ae521825829182e977fd25ac",
+                "sha256:d0b3f629f8d165a21ee082bf31e1697c391c1cdf940304408614b5b7c59d1fb3"
+            ],
+            "index": "pypi",
+            "version": "==0.61.0"
         },
         "faunadb": {
             "hashes": [
@@ -387,6 +395,14 @@
             ],
             "markers": "python_version >= '3.5'",
             "version": "==2.0.1"
+        },
+        "starlette": {
+            "hashes": [
+                "sha256:bd2ffe5e37fb75d014728511f8e68ebf2c80b0fa3d04ca1479f4dc752ae31ac9",
+                "sha256:ebe8ee08d9be96a3c9f31b2cb2a24dbdf845247b745664bd8a3f9bd0c977fdbc"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==0.13.6"
         },
         "twisted": {
             "hashes": [
