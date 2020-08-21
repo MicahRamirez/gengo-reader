@@ -9,10 +9,6 @@ from faunadb.objects import Ref
 from faunadb.client import FaunaClient
 
 
-# on vercel this ASGI is served from <url>/api
-app = FastAPI()
-
-
 class ReadingReference(BaseModel):
     url: str
 
@@ -22,7 +18,11 @@ faunadb_secret = os.getenv('FAUNADB_SECRET')
 client = FaunaClient(secret=faunadb_secret)
 
 
-@app.post("/scrape", status_code=200)
+app = FastAPI(openapi_url="/api/openapi.json",
+              docs_url='/api/docs', redoc_url='/api/redoc')
+
+
+@app.post("/api/scrape", status_code=200)
 async def scrape_article(article: ReadingReference, response: Response):
     if NHK_PREFIX in article.url:
         try:
