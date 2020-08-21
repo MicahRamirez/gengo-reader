@@ -21,7 +21,7 @@ faunadb_secret = os.getenv('FAUNADB_SECRET')
 client = FaunaClient(secret=faunadb_secret)
 
 
-@app.post("/scrape", status_code=200)
+@app.post("/api/scrape", status_code=200)
 async def scrape_article(article: ReadingReference, response: Response):
     if NHK_PREFIX in article.url:
         try:
