@@ -9,6 +9,7 @@ from faunadb.objects import Ref
 from faunadb.client import FaunaClient
 
 
+# on vercel this ASGI is served from <url>/api
 app = FastAPI()
 
 
@@ -21,14 +22,14 @@ faunadb_secret = os.getenv('FAUNADB_SECRET')
 client = FaunaClient(secret=faunadb_secret)
 
 
-@app.post("/api/scrape", status_code=200)
+@app.post("/scrape", status_code=200)
 async def scrape_article(article: ReadingReference, response: Response):
     if NHK_PREFIX in article.url:
         try:
             # see if an article exists
             client.query(q.get(
                 q.match(q.index('reading_by_url'), article.url)))
-            return {"success": True, "status": "DocumentExisted"}
+            return {"success": True, "status": "DocumentExists"}
         except:
             # scrape article and save
             article = requests.get(article.url)
