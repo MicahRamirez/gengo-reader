@@ -1,0 +1,13 @@
+Query(
+  Lambda(
+    ["email", "password", "firstName", "lastName"],
+    Create(Collection("Account"), {
+      credentials: { password: Var("password") },
+      data: {
+        email: Var("email"),
+        firstName: Var("firstName"),
+        lastName: Var("lastName")
+      }
+    })
+  )
+)

@@ -2,6 +2,16 @@ enum SUPPORTED_READINGS {
   NHK_NEWS_WEB_EASY
 }
 
+enum SUPPORTED_LANGUAGE_CODE {
+  JA
+}
+
+type Account {
+  email: String! @unique
+  firstName: String!
+  lastName: String!
+}
+
 type Question {
   question: String!
   answer: String!
@@ -27,17 +37,36 @@ type Reading {
 }
 
 type Teacher {
+  account: Account! @relation
   students: [Student]! @relation(name: "assigned_to")
-  firstName: String!
-  lastName: String!
-  email: String!
   readings: [Reading]! @relation(name: "teacher_assignments")
+  teaches_languages: [Language]! @relation
 }
 
 type Student {
+  account: Account! @relation
   readings: [Reading]! @relation(name: "student_readings")
   teachers: [Teacher]! @relation(name: "assigned_to")
-  firstName: String!
-  lastName: String!
-  email: String!
+  studies_languages: [Language]! @relation
+}
+
+type Language {
+  code: SUPPORTED_LANGUAGE_CODE!
+  display_string: String!
+  students: [Student]! @relation
+  teachers: [Teacher]! @relation
+}
+
+type Mutation {
+  register(
+    email: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+  ): Account! @resolver
+  login(email: String!, password: String!): String! @resolver
+}
+
+type Query {
+  getLoggedInUser(): Account! @resolver
 }

@@ -2,9 +2,9 @@
 
 # Components
 
-- React (NextJS) + Material UI on Vercel Serverless
-- GQL Interface to Datastore in FaunaDB (https://fauna.com/)
-- Python (Fast)Api: Article Parser using Python Scrapy on Vercel Serverless
+- (Serverless) NextJS(React) + Material UI on Vercel Serverless
+- (Serverless Datastore) GQL Interface to Datastore in FaunaDB (https://fauna.com/)
+- (Serverless API) Python FastApi: Article Parser Endpoint using Python Scrapy on Vercel Serverless
 - Auth provided by FaunaDB Auth Capabilities
 - (Stretch) Tokenizer Service most likely on AWS Fargate (Tokenizer requires specific system deps so can't be ran in severless environ)
 - (Stretch) Chat Service
@@ -26,3 +26,7 @@ Running backend service
 3. Use scrapy selectors to testing parsing the desired article
 
 Uses Scrapy https://docs.scrapy.org/en/latest/
+
+# Fauna Authentication
+1. Use buildtime secret known as a bootstrap token to have authorization to invoke login/registration GQL calls. These calls invoke custom resolvers which point to fql functions. You can see the FQL queries in the `/fql_functions` directory.
+2. After a successful call, we receive an auth token which will be used as the new bearer token 
