@@ -11,6 +11,10 @@ const useStyles = makeStyles(() => ({
   },
   title: {
     flexGrow: 1,
+    fontSize: "1em",
+  },
+  appBarText: {
+    em: "12",
   },
 }));
 
@@ -24,6 +28,9 @@ const GengoAppBar: React.FC<{}> = () => {
             Gengo Reader
           </Typography>
           <Button color="inherit">Login</Button>
+          <Button variant="outlined" color="inherit">
+            Get Started
+          </Button>
         </Toolbar>
       </AppBar>
     </div>

@@ -8,6 +8,9 @@ const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
   },
+  grid: {
+    flexDirection: "column",
+  },
 }));
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -15,8 +18,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div className={classes.root}>
-      <GengoAppBar />
-      <Grid container spacing={3}>
+      <Grid className={classes.grid} container spacing={3}>
+        <Grid item>
+          <GengoAppBar />
+        </Grid>
         {children}
       </Grid>
     </div>
