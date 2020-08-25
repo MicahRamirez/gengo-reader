@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import Link from "../src/Link";
-import isEmail from "validator/es/lib/isEmail";
-import normalizeEmail from "validator/es/lib/normalizeEmail";
+// import isEmail from "validator/es/lib/isEmail";
+// import normalizeEmail from "validator/es/lib/normalizeEmail";
 import { Layout } from "../src/Layout";
 import { makeStyles } from "@material-ui/core/styles";
 
