@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -22,15 +23,21 @@ const GengoAppBar: React.FC<{}> = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" elevation={0}>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Gengo Reader
-          </Typography>
-          <Button color="inherit">Login</Button>
-          <Button variant="outlined" color="inherit">
-            Get Started
-          </Button>
+          <Link href="/">
+            <Typography variant="h6" className={classes.title}>
+              Gengo Reader
+            </Typography>
+          </Link>
+          <Link href="/login">
+            <Button color="inherit">Login</Button>
+          </Link>
+          <Link href="/registration">
+            <Button variant="outlined" color="inherit">
+              Get Started
+            </Button>
+          </Link>
         </Toolbar>
       </AppBar>
     </div>

@@ -86,13 +86,7 @@ export default function Index() {
                 }}
               />
             </Grid>
-            <Grid
-              item
-              xs={10}
-              md={2}
-              className={classes.formItem}
-              alignContent="center"
-            >
+            <Grid item xs={10} md={2} className={classes.formItem}>
               <Button color="secondary" variant="outlined" fullWidth>
                 Get Started
               </Button>
