@@ -3,7 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core";
 
 import { Layout } from "../src/Layout";
-import { LoginForm, MainLoginFormBody } from "../src/Login";
+import { LoginForm } from "../src/Login";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,9 +27,7 @@ const Login = () => {
         alignItems="center"
         className={classes.root}
       >
-        <LoginForm>
-          <MainLoginFormBody />
-        </LoginForm>
+        <LoginForm />
       </Grid>
     </Layout>
   );
