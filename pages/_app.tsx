@@ -31,7 +31,7 @@ const MyApp = (props: AppProps & Apollo) => {
   return (
     <React.Fragment>
       <Head>
-        <title>My page</title>
+        <title>Gengo Reader</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -49,7 +49,6 @@ const MyApp = (props: AppProps & Apollo) => {
 };
 
 const RenderProp = (props: AppProps) => {
-  console.log("reendered");
   const ac = new ApolloClient({
     link: links,
     cache: new InMemoryCache(),

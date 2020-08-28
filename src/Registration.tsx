@@ -72,8 +72,6 @@ export const Registration = () => {
             },
           });
         } catch (error) {
-          console.log(error.message);
-          console.log(error.message.endsWith("not unique."));
           if (error.message.endsWith("not unique.")) {
             actions.setStatus(errorStatuses.UNIQUE_EMAIL);
           } else {

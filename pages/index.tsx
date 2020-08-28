@@ -9,7 +9,6 @@ import { Layout } from "../src/Layout";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => {
-  console.log(theme.palette);
   return {
     heading: {
       marginTop: theme.spacing(4),
@@ -81,7 +80,6 @@ export default function Index() {
                 size="small"
                 value={email}
                 onChange={(val) => {
-                  console.log(val);
                   setEmail(val.target.value);
                 }}
               />
