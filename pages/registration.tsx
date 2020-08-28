@@ -2,9 +2,9 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 
 import { Layout } from "../src/Layout";
-import { LoginForm } from "../src/Login";
+import { Registration } from "../src/Registration";
 
-const Login = () => {
+const Register = () => {
   return (
     <Layout>
       <style global jsx>{`
@@ -12,9 +12,9 @@ const Login = () => {
           background-color: #556cd6 !important;
         }
       `}</style>
-      <LoginForm />
+      <Registration />
     </Layout>
   );
 };
 
-export default Login;
+export default Register;

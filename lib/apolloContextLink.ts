@@ -1,18 +1,20 @@
 import { setContext } from "@apollo/client/link/context";
 import { createHttpLink } from "@apollo/client";
+import { AUTH_TOKEN } from "./constants";
 
 const httpLink = createHttpLink({
   uri: "https://graphql.fauna.com/graphql",
 });
 const authLink = setContext((_, { headers }) => {
-  let token: String | undefined = process.env.BOOTSTRAP_KEY;
-  if (window.localStorage) {
-    token = localStorage.get("gengo_token");
-  }
+  const bootstrapToken: String | undefined = process.env.BOOTSTRAP_KEY;
+  const authToken =
+    window && window.localStorage && window.localStorage.getItem(AUTH_TOKEN);
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : "",
+      authorization: authToken
+        ? `Bearer ${authToken}`
+        : `Bearer ${bootstrapToken}`,
     },
   };
 });
