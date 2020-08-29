@@ -9,8 +9,6 @@
 - (Stretch) Tokenizer Service most likely on AWS Fargate (Tokenizer requires specific system deps so can't be ran in severless environ)
 - (Stretch) Chat Service
 
-# Typedefs for Data
-
 # Python Article Parser HOW-TO
 
 Python dev workflow relies on pipenv https://pipenv-fork.readthedocs.io/en/latest/
@@ -28,5 +26,6 @@ Running backend service
 Uses Scrapy https://docs.scrapy.org/en/latest/
 
 # Fauna Authentication
+
 1. Use buildtime secret known as a bootstrap token to have authorization to invoke login/registration GQL calls. These calls invoke custom resolvers which point to fql functions. You can see the FQL queries in the `/fql_functions` directory.
-2. After a successful call, we receive an auth token which will be used as the new bearer token 
+2. After a successful call, we receive an auth token which will be used as the new bearer token
