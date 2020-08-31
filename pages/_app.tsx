@@ -4,18 +4,41 @@ import { AppProps } from "next/app";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ApolloProvider } from "@apollo/react-hooks";
+
 import {
   ApolloClient,
   NormalizedCacheObject,
   InMemoryCache,
+  useQuery,
+  gql,
 } from "@apollo/client";
 
 import theme from "../src/theme";
 import links from "../lib/apolloContextLink";
+import { useState } from "react";
 
 interface Apollo {
   client: ApolloClient<NormalizedCacheObject>;
 }
+
+interface Account {}
+
+type AuthContext = {
+  user: Account;
+  setUser: (user: Account) => void;
+};
+const AuthContext = React.createContext<AuthContext | undefined>(undefined);
+// https://codesandbox.io/s/react-ts-complex-context-function-f1cv4?fontsize=14&hidenavigation=1&theme=dark&file=/src/index.tsx
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [user, setUser] = useState({});
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
 const MyApp = (props: AppProps & Apollo) => {
   const { Component, pageProps, client } = props;
@@ -41,7 +64,9 @@ const MyApp = (props: AppProps & Apollo) => {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <ApolloProvider client={client}>
-          <Component {...pageProps} />
+          <AuthProvider>
+            <Component {...pageProps} />
+          </AuthProvider>
         </ApolloProvider>
       </ThemeProvider>
     </React.Fragment>

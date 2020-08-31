@@ -1,5 +1,6 @@
 enum SUPPORTED_READINGS {
-  NHK_NEWS_WEB_EASY
+  NHK_NEWS_WEB_EASY,
+  USER_CREATED
 }
 
 enum SUPPORTED_LANGUAGE_CODE {
@@ -28,7 +29,7 @@ type Reading {
   discussion_questions: [Question]! @relation(name: "discussion_questions")
   vocab: [Vocabulary]! @relation(name: "discussion_vocab")
   reading_type: SUPPORTED_READINGS!
-  reading_url: String!
+  reading_url: String
   text: String!
   title: String!
   teachers: [Teacher]! @relation(name: "teacher_assignments")
