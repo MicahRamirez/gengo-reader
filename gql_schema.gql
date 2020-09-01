@@ -1,10 +1,14 @@
 enum SUPPORTED_READINGS {
-  NHK_NEWS_WEB_EASY,
+  NHK_NEWS_WEB_EASY
   USER_CREATED
 }
 
 enum SUPPORTED_LANGUAGE_CODE {
   JA
+}
+
+type Query {
+  getLoggedInUser: Account! @resolver
 }
 
 type Account {
@@ -15,7 +19,7 @@ type Account {
 
 type Question {
   question: String!
-  answer: String!
+  answer: String
   discussion_questions: [Reading]! @relation(name: "discussion_questions")
 }
 
@@ -66,8 +70,4 @@ type Mutation {
     lastName: String!
   ): Account! @resolver
   login(email: String!, password: String!): String! @resolver
-}
-
-type Query {
-  getLoggedInUser(): Account! @resolver
 }

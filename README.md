@@ -29,3 +29,7 @@ Uses Scrapy https://docs.scrapy.org/en/latest/
 
 1. Use buildtime secret known as a bootstrap token to have authorization to invoke login/registration GQL calls. These calls invoke custom resolvers which point to fql functions. You can see the FQL queries in the `/fql_functions` directory.
 2. After a successful call, we receive an auth token which will be used as the new bearer token
+
+## Bootstrap Token Role Access
+
+1. Bootstrap token should have read, create access to Accounts, function access to login and register, read access to the unique_Accounts index
