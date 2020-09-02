@@ -1,27 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useLazyQuery, gql } from "@apollo/client";
-import { useRouter } from "next/router";
 
 import { AUTH_TOKEN } from "../lib/constants";
-
-const GET_LOGGED_IN_USER = gql`
-  query getUser {
-    getLoggedInUser {
-      email
-      _id
-      firstName
-      lastName
-    }
-  }
-`;
-
-interface Account {}
+import { useGetUserQuery, Account } from "../clientTypes";
 
 type AuthContext = {
-  user: Account;
+  user: Pick<Account, "email" | "_id" | "firstName" | "lastName"> | undefined;
   setUser: (user: Account) => void;
-  userToken: string;
-  setUserToken: (userToken: string) => void;
 };
 
 export const AuthContext = React.createContext<AuthContext | undefined>(
@@ -31,52 +15,27 @@ export const AuthContext = React.createContext<AuthContext | undefined>(
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [getUser, { data }] = useLazyQuery(GET_LOGGED_IN_USER);
-  const router = useRouter();
-
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<
+    Pick<Account, "email" | "_id" | "firstName" | "lastName">
+  >();
   const [userToken, setUserToken] = useState("");
+  useGetUserQuery({
+    skip: userToken === "" || user !== undefined,
+    onCompleted: (data) => {
+      setUser(data.getLoggedInUser);
+    },
+  });
 
   // on first render check local storage from the token. If we have one set the user Token
   useEffect(() => {
-    const checkAuthToken = () => {
-      const authToken = window.localStorage.getItem(AUTH_TOKEN);
-      console.log("saved auth token", authToken);
-      if (authToken) {
-        setUserToken(authToken);
-      }
-    };
-    checkAuthToken();
-    window.addEventListener("storage", checkAuthToken);
-    return () => {
-      window.removeEventListener("storage", checkAuthToken);
-    };
+    const authToken = window.localStorage.getItem(AUTH_TOKEN);
+    if (authToken) {
+      setUserToken(authToken);
+    }
   }, []);
 
-  useEffect(() => {
-    async function fetchAuthenticatedUser() {
-      if (userToken) {
-        try {
-          await getUser();
-        } catch (error) {
-          console.log(error);
-          console.warn("Unable to obtain authenticated user");
-        }
-      }
-    }
-    if (data && data.getLoggedInUser) {
-      setUser(data.getLoggedInUser);
-      router.push("/home");
-      console.log("rendering");
-    }
-    if (Object.keys(user).length === 0 && userToken) {
-      fetchAuthenticatedUser();
-    }
-    // issue with dependency array keeps component rerendering.
-  }, [userToken, data.email]);
-
   return (
-    <AuthContext.Provider value={{ user, setUser, userToken, setUserToken }}>
+    <AuthContext.Provider value={{ user, setUser }}>
       {children}
     </AuthContext.Provider>
   );
