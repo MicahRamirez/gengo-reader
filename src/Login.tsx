@@ -39,14 +39,7 @@ const LoginSchema = yup.object().shape({
 
 export const LoginForm: React.FC<{}> = () => {
   const [login] = useDoLoginMutation();
-  const router = useRouter();
-  const authContext = useContext(AuthContext);
-  let setUserToken = (userToken: string) => {
-    console.warn("usertoken not set", userToken);
-  };
-  if (authContext) {
-    setUserToken = authContext.setUserToken;
-  }
+  const { setUserToken } = useContext(AuthContext);
 
   // validation/normalization functions
   const classes = useStyles();
@@ -59,7 +52,6 @@ export const LoginForm: React.FC<{}> = () => {
         try {
           res = await login({ variables: { ...values } });
           if (res && res.data) {
-            debugger;
             setUserToken(AUTH_TOKEN);
             window.localStorage.setItem(AUTH_TOKEN, res.data.login);
           } else {

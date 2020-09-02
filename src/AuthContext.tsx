@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 import { AUTH_TOKEN } from "../lib/constants";
 import { useGetUserQuery, Account } from "../clientTypes";
@@ -6,15 +7,19 @@ import { useGetUserQuery, Account } from "../clientTypes";
 type AuthContext = {
   user: Pick<Account, "email" | "_id" | "firstName" | "lastName"> | undefined;
   setUser: (user: Account) => void;
+  setUserToken: (token: string) => void;
 };
 
-export const AuthContext = React.createContext<AuthContext | undefined>(
-  undefined
-);
+export const AuthContext = React.createContext<AuthContext>({
+  user: undefined,
+  setUser: () => ({}),
+  setUserToken: () => ({}),
+});
 // https://codesandbox.io/s/react-ts-complex-context-function-f1cv4?fontsize=14&hidenavigation=1&theme=dark&file=/src/index.tsx
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const router = useRouter();
   const [user, setUser] = useState<
     Pick<Account, "email" | "_id" | "firstName" | "lastName">
   >();
@@ -23,6 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     skip: userToken === "" || user !== undefined,
     onCompleted: (data) => {
       setUser(data.getLoggedInUser);
+      router.push("/home");
     },
   });
 
@@ -35,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, setUserToken }}>
       {children}
     </AuthContext.Provider>
   );
