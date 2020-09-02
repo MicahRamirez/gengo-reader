@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import { Layout } from "../src/Layout";
-import { AuthContext } from "../pages/_app";
+import { AuthContext } from "../src/AuthContext";
 
 const ViewType: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const test = useContext(AuthContext);
-  console.log(test);
-  console.log(children[0]("test"));
+  const { user } = useContext(AuthContext);
+  console.log(user);
   return (
     <>
       {typeof children === "function" ? (

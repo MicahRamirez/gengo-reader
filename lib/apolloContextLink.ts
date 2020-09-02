@@ -7,7 +7,6 @@ const httpLink = createHttpLink({
 });
 const authLink = setContext((_, { headers }) => {
   const bootstrapToken: String | undefined = process.env.BOOTSTRAP_KEY;
-  console.log(process.env.BOOTSTRAP_KEY);
   const authToken =
     window && window.localStorage && window.localStorage.getItem(AUTH_TOKEN);
   return {

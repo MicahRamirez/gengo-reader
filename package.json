@@ -21,9 +21,14 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest",
+    "generate": "graphql-codegen"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.17.8",
+    "@graphql-codegen/typescript": "^1.17.9",
+    "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@graphql-codegen/typescript-react-apollo": "^2.0.6",
     "@types/next": "latest",
     "@types/node": "latest",
     "@types/react": "latest",

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useRouter } from "next/router";
-import { gql, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Formik, Form, Field } from "formik";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -9,6 +9,8 @@ import { TextField } from "formik-material-ui";
 import * as yup from "yup";
 
 import { AUTH_TOKEN } from "../lib/constants";
+import { AuthContext } from "./AuthContext";
+import { useDoLoginMutation } from "../clientTypes";
 import {
   LoginRegistrationFormLayout,
   errorStatuses,
@@ -36,8 +38,16 @@ const LoginSchema = yup.object().shape({
 });
 
 export const LoginForm: React.FC<{}> = () => {
-  const [login] = useMutation(LOGIN);
+  const [login] = useDoLoginMutation();
   const router = useRouter();
+  const authContext = useContext(AuthContext);
+  let setUserToken = (userToken: string) => {
+    console.warn("usertoken not set", userToken);
+  };
+  if (authContext) {
+    setUserToken = authContext.setUserToken;
+  }
+
   // validation/normalization functions
   const classes = useStyles();
   return (
@@ -48,8 +58,13 @@ export const LoginForm: React.FC<{}> = () => {
         let res;
         try {
           res = await login({ variables: { ...values } });
-          window.localStorage.setItem(AUTH_TOKEN, res.data.login);
-          router.push("/home");
+          if (res && res.data) {
+            debugger;
+            setUserToken(AUTH_TOKEN);
+            window.localStorage.setItem(AUTH_TOKEN, res.data.login);
+          } else {
+            throw Error("result or result data undefined");
+          }
         } catch (error) {
           actions.setStatus(errorStatuses.LOGIN_ERROR);
         }

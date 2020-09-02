@@ -1,0 +1,15 @@
+schema:
+  - https://graphql.fauna.com/graphql:
+      headers:
+        Authorization: "Bearer fnAD0twExJACDD9YtC6S4VnFU0hf0gLVZjYXD0Rs"
+generates:
+  ./serverTypes.d.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+  ./clientTypes.d.ts:
+    documents: ./src/queries/*.tsx
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
