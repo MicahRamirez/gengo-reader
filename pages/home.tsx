@@ -39,6 +39,8 @@ const Home = () => {
         {(props: any) => {
           console.log(props);
         }}{" "}
+        <StudentView />
+        <TeacherView />
       </ViewType>
     </Layout>
   );
