@@ -14,6 +14,7 @@ import {
 import theme from "../src/theme";
 import links from "../lib/apolloContextLink";
 import { AuthProvider } from "../src/AuthContext";
+import { App } from "../src/App";
 
 interface Apollo {
   client: ApolloClient<NormalizedCacheObject>;
@@ -44,7 +45,9 @@ const MyApp = (props: AppProps & Apollo) => {
         <CssBaseline />
         <ApolloProvider client={client}>
           <AuthProvider>
-            <Component {...pageProps} />
+            <App>
+              <Component {...pageProps} />
+            </App>
           </AuthProvider>
         </ApolloProvider>
       </ThemeProvider>

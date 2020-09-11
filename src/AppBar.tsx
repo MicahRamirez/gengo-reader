@@ -31,10 +31,16 @@ const GengoAppBar: React.FC<{}> = () => {
             </Typography>
           </Link>
           <Link href="/login">
-            <Button color="inherit">Login</Button>
+            <Button data-cy="nav-login" color="inherit">
+              Login
+            </Button>
           </Link>
           <Link href="/registration">
-            <Button variant="outlined" color="inherit">
+            <Button
+              data-cy="nav-registration"
+              variant="outlined"
+              color="inherit"
+            >
               Get Started
             </Button>
           </Link>

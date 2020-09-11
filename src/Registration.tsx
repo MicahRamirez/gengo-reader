@@ -84,7 +84,7 @@ export const Registration = () => {
               variables: { email: values.email, password: values.password },
             });
             window.localStorage.setItem(AUTH_TOKEN, loginResult.data.login);
-            router.push("/home");
+            router.push("/");
           } catch (error) {
             // should not happen in this flow, but maybe the service goes down
             actions.setStatus(errorStatuses.LOGIN_ERROR);
@@ -101,6 +101,7 @@ export const Registration = () => {
           >
             <Grid item xs={12} sm={10} justify="center" container>
               <Field
+                data-cy="registration-firstname"
                 name="firstName"
                 label="First name"
                 component={TextField}
@@ -118,6 +119,7 @@ export const Registration = () => {
             </Grid>
             <Grid item xs={12} sm={10} justify="center" container>
               <Field
+                data-cy="registration-lastname"
                 name="lastName"
                 label="Last name"
                 component={TextField}
@@ -135,6 +137,7 @@ export const Registration = () => {
             </Grid>
             <Grid item xs={12} sm={10} justify="center" container>
               <Field
+                data-cy="registration-email"
                 name="email"
                 label="Email"
                 component={TextField}
@@ -153,6 +156,7 @@ export const Registration = () => {
             </Grid>
             <Grid item container justify="center" xs={12} sm={10}>
               <Field
+                data-cy="registration-password"
                 name="password"
                 label="Password"
                 component={TextField}
@@ -171,6 +175,7 @@ export const Registration = () => {
             </Grid>
             <Grid item container justify="center" xs={12} sm={10}>
               <Field
+                data-cy="registration-confirmpassword"
                 name="confirm"
                 label="Confirm password"
                 component={TextField}
@@ -189,6 +194,7 @@ export const Registration = () => {
             </Grid>
             <Grid item container xs={12} sm={10} justify="center">
               <Button
+                data-cy="registration-create"
                 type="submit"
                 color="primary"
                 variant="contained"

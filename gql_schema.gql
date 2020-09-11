@@ -15,42 +15,57 @@ type Account {
   email: String! @unique
   firstName: String!
   lastName: String!
+  teacher: Teacher
+  student: Student
 }
 
 type Question {
   question: String!
+  answer: String! # has a "correct" answer determined by the teacher
+  associated_reading: Reading!
+  student_answers: [StudentAnswer]! # a question can be answered by many students
+}
+
+type StudentAnswer {
+  answered_by: Student # answered by a student or unauthenticated user
   answer: String
-  discussion_questions: [Reading]! @relation(name: "discussion_questions")
+  question: Question!
 }
 
 type Vocabulary {
-  word: String!
+  word: String! @unique
   definition: String
-  discussion_questions: [Reading]! @relation(name: "discussion_vocab")
+  appears_in: [Reading]! @relation(name: "discussion_vocab") #this could get big quick
 }
 
+type ReadingSession {
+  reading: Reading!
+  teacher: Teacher!
+  student: Student # may or may not have a student assigned, think links sent to students
+}
+
+# Readings can either be user generated or scrapped from a website.
 type Reading {
   discussion_questions: [Question]! @relation(name: "discussion_questions")
-  vocab: [Vocabulary]! @relation(name: "discussion_vocab")
+  vocabulary: [Vocabulary]! @relation(name: "discussion_vocab")
   reading_type: SUPPORTED_READINGS!
   reading_url: String
   text: String!
   title: String!
-  teachers: [Teacher]! @relation(name: "teacher_assignments")
-  students: [Student]! @relation(name: "student_readings")
-  # tokens: TokenMap TODO Tokenize the scraped article
+  created_by: Teacher
 }
 
 type Teacher {
-  account: Account! @relation
+  account: Account! @relation(name: "teacher_account")
   students: [Student]! @relation(name: "assigned_to")
-  readings: [Reading]! @relation(name: "teacher_assignments")
+  reading_sessions: [ReadingSession]!
   teaches_languages: [Language]! @relation
 }
 
 type Student {
-  account: Account! @relation
-  readings: [Reading]! @relation(name: "student_readings")
+  account: Account! @relation(name: "student_account")
+  reading_sessions: [ReadingSession]!
+  @relation(name: "student_readings_sessions")
   teachers: [Teacher]! @relation(name: "assigned_to")
   studies_languages: [Language]! @relation
 }

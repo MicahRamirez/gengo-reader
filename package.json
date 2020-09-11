@@ -22,7 +22,8 @@
     "build": "next build",
     "start": "next start",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen",
+    "cypress:open": "$(npm bin)/cypress open"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.17.8",
@@ -33,6 +34,7 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "cypress": "^5.1.0",
     "husky": "^4.2.5",
     "typescript": "latest"
   }

@@ -31,6 +31,12 @@ export const GET_LOGGED_IN_USER = gql`
       _id
       firstName
       lastName
+      student {
+        _id
+      }
+      teacher {
+        _id
+      }
     }
   }
 `;

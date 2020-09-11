@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { gql } from "@apollo/client";
+import { useRouter } from "next/router";
 import { Formik, Form, Field } from "formik";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -39,6 +40,7 @@ const LoginSchema = yup.object().shape({
 export const LoginForm: React.FC<{}> = () => {
   const [login] = useDoLoginMutation();
   const { setUserToken } = useContext(AuthContext);
+  const router = useRouter();
 
   // validation/normalization functions
   const classes = useStyles();
@@ -52,7 +54,10 @@ export const LoginForm: React.FC<{}> = () => {
           res = await login({ variables: { ...values } });
           if (res && res.data) {
             setUserToken(AUTH_TOKEN);
+            // save user token for future usage
             window.localStorage.setItem(AUTH_TOKEN, res.data.login);
+            // move the user to the root of the app
+            router.push("/");
           } else {
             throw Error("result or result data undefined");
           }
@@ -71,6 +76,7 @@ export const LoginForm: React.FC<{}> = () => {
             <Grid item xs={12} sm={10} justify="center" container>
               <Field
                 className={classes.emailField}
+                data-cy="login-email"
                 name="email"
                 label="Email"
                 component={TextField}
@@ -89,6 +95,7 @@ export const LoginForm: React.FC<{}> = () => {
             </Grid>
             <Grid item container justify="center" xs={12} sm={10}>
               <Field
+                data-cy="login-password"
                 name="password"
                 label="Password"
                 component={TextField}
