@@ -20,6 +20,24 @@ export type AccountInput = {
   email: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
+  teacher?: Maybe<AccountTeacherRelation>;
+  student?: Maybe<AccountStudentRelation>;
+};
+
+/** Allow manipulating the relationship between the types 'Account' and 'Student' using the field 'Account.student'. */
+export type AccountStudentRelation = {
+  /** Create a document of type 'Student' and associate it with the current document. */
+  create?: Maybe<StudentInput>;
+  /** Connect a document of type 'Student' with the current document using its ID. */
+  connect?: Maybe<Scalars['ID']>;
+};
+
+/** Allow manipulating the relationship between the types 'Account' and 'Teacher' using the field 'Account.teacher'. */
+export type AccountTeacherRelation = {
+  /** Create a document of type 'Teacher' and associate it with the current document. */
+  create?: Maybe<TeacherInput>;
+  /** Connect a document of type 'Teacher' with the current document using its ID. */
+  connect?: Maybe<Scalars['ID']>;
 };
 
 
@@ -27,6 +45,7 @@ export type AccountInput = {
 export type LanguageInput = {
   code: Supported_Language_Code;
   display_string: Scalars['String'];
+  language_string: Scalars['String'];
   students?: Maybe<LanguageStudentsRelation>;
   teachers?: Maybe<LanguageTeachersRelation>;
 };
@@ -62,12 +81,20 @@ export type Mutation = {
   createVocabulary: Vocabulary;
   /** Update an existing document in the collection of 'Vocabulary' */
   updateVocabulary?: Maybe<Vocabulary>;
+  /** Update an existing document in the collection of 'ReadingSession' */
+  updateReadingSession?: Maybe<ReadingSession>;
   /** Update an existing document in the collection of 'Question' */
   updateQuestion?: Maybe<Question>;
   /** Delete an existing document in the collection of 'Reading' */
   deleteReading?: Maybe<Reading>;
   /** Update an existing document in the collection of 'Student' */
   updateStudent?: Maybe<Student>;
+  /** Create a new document in the collection of 'StudentAnswer' */
+  createStudentAnswer: StudentAnswer;
+  /** Create a new document in the collection of 'ReadingSession' */
+  createReadingSession: ReadingSession;
+  /** Update an existing document in the collection of 'StudentAnswer' */
+  updateStudentAnswer?: Maybe<StudentAnswer>;
   /** Create a new document in the collection of 'Student' */
   createStudent: Student;
   /** Delete an existing document in the collection of 'Account' */
@@ -76,10 +103,14 @@ export type Mutation = {
   deleteLanguage?: Maybe<Language>;
   /** Create a new document in the collection of 'Reading' */
   createReading: Reading;
+  /** Delete an existing document in the collection of 'StudentAnswer' */
+  deleteStudentAnswer?: Maybe<StudentAnswer>;
   /** Create a new document in the collection of 'Question' */
   createQuestion: Question;
   /** Update an existing document in the collection of 'Account' */
   updateAccount?: Maybe<Account>;
+  /** Delete an existing document in the collection of 'ReadingSession' */
+  deleteReadingSession?: Maybe<ReadingSession>;
   /** Delete an existing document in the collection of 'Vocabulary' */
   deleteVocabulary?: Maybe<Vocabulary>;
   /** Create a new document in the collection of 'Teacher' */
@@ -130,6 +161,12 @@ export type MutationUpdateVocabularyArgs = {
 };
 
 
+export type MutationUpdateReadingSessionArgs = {
+  id: Scalars['ID'];
+  data: ReadingSessionInput;
+};
+
+
 export type MutationUpdateQuestionArgs = {
   id: Scalars['ID'];
   data: QuestionInput;
@@ -144,6 +181,22 @@ export type MutationDeleteReadingArgs = {
 export type MutationUpdateStudentArgs = {
   id: Scalars['ID'];
   data: StudentInput;
+};
+
+
+export type MutationCreateStudentAnswerArgs = {
+  data: StudentAnswerInput;
+};
+
+
+export type MutationCreateReadingSessionArgs = {
+  data: ReadingSessionInput;
+};
+
+
+export type MutationUpdateStudentAnswerArgs = {
+  id: Scalars['ID'];
+  data: StudentAnswerInput;
 };
 
 
@@ -167,6 +220,11 @@ export type MutationCreateReadingArgs = {
 };
 
 
+export type MutationDeleteStudentAnswerArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationCreateQuestionArgs = {
   data: QuestionInput;
 };
@@ -175,6 +233,11 @@ export type MutationCreateQuestionArgs = {
 export type MutationUpdateAccountArgs = {
   id: Scalars['ID'];
   data: AccountInput;
+};
+
+
+export type MutationDeleteReadingSessionArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -225,21 +288,30 @@ export type MutationDeleteTeacherArgs = {
   id: Scalars['ID'];
 };
 
-/** Allow manipulating the relationship between the types 'Question' and 'Reading'. */
-export type QuestionDiscussion_QuestionsRelation = {
-  /** Create one or more documents of type 'Reading' and associate them with the current document. */
-  create?: Maybe<Array<Maybe<ReadingInput>>>;
-  /** Connect one or more documents of type 'Reading' with the current document using their IDs. */
-  connect?: Maybe<Array<Maybe<Scalars['ID']>>>;
-  /** Disconnect the given documents of type 'Reading' from the current document using their IDs. */
-  disconnect?: Maybe<Array<Maybe<Scalars['ID']>>>;
+/** Allow manipulating the relationship between the types 'Question' and 'Reading' using the field 'Question.associated_reading'. */
+export type QuestionAssociated_ReadingRelation = {
+  /** Create a document of type 'Reading' and associate it with the current document. */
+  create?: Maybe<ReadingInput>;
+  /** Connect a document of type 'Reading' with the current document using its ID. */
+  connect?: Maybe<Scalars['ID']>;
 };
 
 /** 'Question' input values */
 export type QuestionInput = {
   question: Scalars['String'];
-  answer?: Maybe<Scalars['String']>;
-  discussion_questions?: Maybe<QuestionDiscussion_QuestionsRelation>;
+  answer: Scalars['String'];
+  associated_reading?: Maybe<QuestionAssociated_ReadingRelation>;
+  student_answers: Array<Maybe<Scalars['ID']>>;
+};
+
+/** Allow manipulating the relationship between the types 'Reading' and 'Teacher' using the field 'Reading.created_by'. */
+export type ReadingCreated_ByRelation = {
+  /** Create a document of type 'Teacher' and associate it with the current document. */
+  create?: Maybe<TeacherInput>;
+  /** Connect a document of type 'Teacher' with the current document using its ID. */
+  connect?: Maybe<Scalars['ID']>;
+  /** If true, disconnects this document from 'Teacher' */
+  disconnect?: Maybe<Scalars['Boolean']>;
 };
 
 /** Allow manipulating the relationship between the types 'Reading' and 'Question'. */
@@ -255,37 +327,49 @@ export type ReadingDiscussion_QuestionsRelation = {
 /** 'Reading' input values */
 export type ReadingInput = {
   discussion_questions?: Maybe<ReadingDiscussion_QuestionsRelation>;
-  vocab?: Maybe<ReadingVocabRelation>;
+  vocabulary?: Maybe<ReadingVocabularyRelation>;
   reading_type: Supported_Readings;
   reading_url?: Maybe<Scalars['String']>;
   text: Scalars['String'];
   title: Scalars['String'];
-  teachers?: Maybe<ReadingTeachersRelation>;
-  students?: Maybe<ReadingStudentsRelation>;
+  created_by?: Maybe<ReadingCreated_ByRelation>;
 };
 
-/** Allow manipulating the relationship between the types 'Reading' and 'Student'. */
-export type ReadingStudentsRelation = {
-  /** Create one or more documents of type 'Student' and associate them with the current document. */
-  create?: Maybe<Array<Maybe<StudentInput>>>;
-  /** Connect one or more documents of type 'Student' with the current document using their IDs. */
-  connect?: Maybe<Array<Maybe<Scalars['ID']>>>;
-  /** Disconnect the given documents of type 'Student' from the current document using their IDs. */
-  disconnect?: Maybe<Array<Maybe<Scalars['ID']>>>;
+/** 'ReadingSession' input values */
+export type ReadingSessionInput = {
+  reading?: Maybe<ReadingSessionReadingRelation>;
+  teacher?: Maybe<ReadingSessionTeacherRelation>;
+  student?: Maybe<ReadingSessionStudentRelation>;
 };
 
-/** Allow manipulating the relationship between the types 'Reading' and 'Teacher'. */
-export type ReadingTeachersRelation = {
-  /** Create one or more documents of type 'Teacher' and associate them with the current document. */
-  create?: Maybe<Array<Maybe<TeacherInput>>>;
-  /** Connect one or more documents of type 'Teacher' with the current document using their IDs. */
-  connect?: Maybe<Array<Maybe<Scalars['ID']>>>;
-  /** Disconnect the given documents of type 'Teacher' from the current document using their IDs. */
-  disconnect?: Maybe<Array<Maybe<Scalars['ID']>>>;
+/** Allow manipulating the relationship between the types 'ReadingSession' and 'Reading' using the field 'ReadingSession.reading'. */
+export type ReadingSessionReadingRelation = {
+  /** Create a document of type 'Reading' and associate it with the current document. */
+  create?: Maybe<ReadingInput>;
+  /** Connect a document of type 'Reading' with the current document using its ID. */
+  connect?: Maybe<Scalars['ID']>;
+};
+
+/** Allow manipulating the relationship between the types 'ReadingSession' and 'Student' using the field 'ReadingSession.student'. */
+export type ReadingSessionStudentRelation = {
+  /** Create a document of type 'Student' and associate it with the current document. */
+  create?: Maybe<StudentInput>;
+  /** Connect a document of type 'Student' with the current document using its ID. */
+  connect?: Maybe<Scalars['ID']>;
+  /** If true, disconnects this document from 'Student' */
+  disconnect?: Maybe<Scalars['Boolean']>;
+};
+
+/** Allow manipulating the relationship between the types 'ReadingSession' and 'Teacher' using the field 'ReadingSession.teacher'. */
+export type ReadingSessionTeacherRelation = {
+  /** Create a document of type 'Teacher' and associate it with the current document. */
+  create?: Maybe<TeacherInput>;
+  /** Connect a document of type 'Teacher' with the current document using its ID. */
+  connect?: Maybe<Scalars['ID']>;
 };
 
 /** Allow manipulating the relationship between the types 'Reading' and 'Vocabulary'. */
-export type ReadingVocabRelation = {
+export type ReadingVocabularyRelation = {
   /** Create one or more documents of type 'Vocabulary' and associate them with the current document. */
   create?: Maybe<Array<Maybe<VocabularyInput>>>;
   /** Connect one or more documents of type 'Vocabulary' with the current document using their IDs. */
@@ -300,23 +384,50 @@ export type StudentAccountRelation = {
   create?: Maybe<AccountInput>;
   /** Connect a document of type 'Account' with the current document using its ID. */
   connect?: Maybe<Scalars['ID']>;
+  /** If true, disconnects this document from 'Account' */
+  disconnect?: Maybe<Scalars['Boolean']>;
+};
+
+/** Allow manipulating the relationship between the types 'StudentAnswer' and 'Student' using the field 'StudentAnswer.answered_by'. */
+export type StudentAnswerAnswered_ByRelation = {
+  /** Create a document of type 'Student' and associate it with the current document. */
+  create?: Maybe<StudentInput>;
+  /** Connect a document of type 'Student' with the current document using its ID. */
+  connect?: Maybe<Scalars['ID']>;
+  /** If true, disconnects this document from 'Student' */
+  disconnect?: Maybe<Scalars['Boolean']>;
+};
+
+/** 'StudentAnswer' input values */
+export type StudentAnswerInput = {
+  answered_by?: Maybe<StudentAnswerAnswered_ByRelation>;
+  answer?: Maybe<Scalars['String']>;
+  question?: Maybe<StudentAnswerQuestionRelation>;
+};
+
+/** Allow manipulating the relationship between the types 'StudentAnswer' and 'Question' using the field 'StudentAnswer.question'. */
+export type StudentAnswerQuestionRelation = {
+  /** Create a document of type 'Question' and associate it with the current document. */
+  create?: Maybe<QuestionInput>;
+  /** Connect a document of type 'Question' with the current document using its ID. */
+  connect?: Maybe<Scalars['ID']>;
 };
 
 /** 'Student' input values */
 export type StudentInput = {
   account?: Maybe<StudentAccountRelation>;
-  readings?: Maybe<StudentReadingsRelation>;
+  reading_sessions?: Maybe<StudentReading_SessionsRelation>;
   teachers?: Maybe<StudentTeachersRelation>;
   studies_languages?: Maybe<StudentStudies_LanguagesRelation>;
 };
 
-/** Allow manipulating the relationship between the types 'Student' and 'Reading'. */
-export type StudentReadingsRelation = {
-  /** Create one or more documents of type 'Reading' and associate them with the current document. */
-  create?: Maybe<Array<Maybe<ReadingInput>>>;
-  /** Connect one or more documents of type 'Reading' with the current document using their IDs. */
+/** Allow manipulating the relationship between the types 'Student' and 'ReadingSession'. */
+export type StudentReading_SessionsRelation = {
+  /** Create one or more documents of type 'ReadingSession' and associate them with the current document. */
+  create?: Maybe<Array<Maybe<ReadingSessionInput>>>;
+  /** Connect one or more documents of type 'ReadingSession' with the current document using their IDs. */
   connect?: Maybe<Array<Maybe<Scalars['ID']>>>;
-  /** Disconnect the given documents of type 'Reading' from the current document using their IDs. */
+  /** Disconnect the given documents of type 'ReadingSession' from the current document using their IDs. */
   disconnect?: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
@@ -346,24 +457,16 @@ export type TeacherAccountRelation = {
   create?: Maybe<AccountInput>;
   /** Connect a document of type 'Account' with the current document using its ID. */
   connect?: Maybe<Scalars['ID']>;
+  /** If true, disconnects this document from 'Account' */
+  disconnect?: Maybe<Scalars['Boolean']>;
 };
 
 /** 'Teacher' input values */
 export type TeacherInput = {
   account?: Maybe<TeacherAccountRelation>;
   students?: Maybe<TeacherStudentsRelation>;
-  readings?: Maybe<TeacherReadingsRelation>;
+  reading_sessions?: Maybe<Array<Maybe<Scalars['ID']>>>;
   teaches_languages?: Maybe<TeacherTeaches_LanguagesRelation>;
-};
-
-/** Allow manipulating the relationship between the types 'Teacher' and 'Reading'. */
-export type TeacherReadingsRelation = {
-  /** Create one or more documents of type 'Reading' and associate them with the current document. */
-  create?: Maybe<Array<Maybe<ReadingInput>>>;
-  /** Connect one or more documents of type 'Reading' with the current document using their IDs. */
-  connect?: Maybe<Array<Maybe<Scalars['ID']>>>;
-  /** Disconnect the given documents of type 'Reading' from the current document using their IDs. */
-  disconnect?: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 /** Allow manipulating the relationship between the types 'Teacher' and 'Student'. */
@@ -388,7 +491,7 @@ export type TeacherTeaches_LanguagesRelation = {
 
 
 /** Allow manipulating the relationship between the types 'Vocabulary' and 'Reading'. */
-export type VocabularyDiscussion_QuestionsRelation = {
+export type VocabularyAppears_InRelation = {
   /** Create one or more documents of type 'Reading' and associate them with the current document. */
   create?: Maybe<Array<Maybe<ReadingInput>>>;
   /** Connect one or more documents of type 'Reading' with the current document using their IDs. */
@@ -401,11 +504,13 @@ export type VocabularyDiscussion_QuestionsRelation = {
 export type VocabularyInput = {
   word: Scalars['String'];
   definition?: Maybe<Scalars['String']>;
-  discussion_questions?: Maybe<VocabularyDiscussion_QuestionsRelation>;
+  appears_in?: Maybe<VocabularyAppears_InRelation>;
 };
 
 export type Account = {
   __typename?: 'Account';
+  student?: Maybe<Student>;
+  teacher?: Maybe<Teacher>;
   email: Scalars['String'];
   /** The document's ID. */
   _id: Scalars['ID'];
@@ -423,6 +528,7 @@ export type Language = {
   teachers: TeacherPage;
   code: Supported_Language_Code;
   display_string: Scalars['String'];
+  language_string: Scalars['String'];
   /** The document's timestamp. */
   _ts: Scalars['Long'];
 };
@@ -456,11 +562,16 @@ export type Query = {
   findLanguageByID?: Maybe<Language>;
   /** Find a document from the collection of 'Student' by its id. */
   findStudentByID?: Maybe<Student>;
+  /** Find a document from the collection of 'ReadingSession' by its id. */
+  findReadingSessionByID?: Maybe<ReadingSession>;
   /** Find a document from the collection of 'Question' by its id. */
   findQuestionByID?: Maybe<Question>;
   /** Find a document from the collection of 'Teacher' by its id. */
   findTeacherByID?: Maybe<Teacher>;
+  getAllLanguages: Array<Maybe<Language>>;
   getLoggedInUser: Account;
+  /** Find a document from the collection of 'StudentAnswer' by its id. */
+  findStudentAnswerByID?: Maybe<StudentAnswer>;
   /** Find a document from the collection of 'Reading' by its id. */
   findReadingByID?: Maybe<Reading>;
   /** Find a document from the collection of 'Vocabulary' by its id. */
@@ -480,12 +591,22 @@ export type QueryFindStudentByIdArgs = {
 };
 
 
+export type QueryFindReadingSessionByIdArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type QueryFindQuestionByIdArgs = {
   id: Scalars['ID'];
 };
 
 
 export type QueryFindTeacherByIdArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryFindStudentAnswerByIdArgs = {
   id: Scalars['ID'];
 };
 
@@ -507,18 +628,13 @@ export type QueryFindAccountByIdArgs = {
 export type Question = {
   __typename?: 'Question';
   question: Scalars['String'];
-  discussion_questions: ReadingPage;
+  associated_reading: Reading;
   /** The document's ID. */
   _id: Scalars['ID'];
-  answer?: Maybe<Scalars['String']>;
+  answer: Scalars['String'];
+  student_answers: Array<Maybe<StudentAnswer>>;
   /** The document's timestamp. */
   _ts: Scalars['Long'];
-};
-
-
-export type QuestionDiscussion_QuestionsArgs = {
-  _size?: Maybe<Scalars['Int']>;
-  _cursor?: Maybe<Scalars['String']>;
 };
 
 /** The pagination object for elements of type 'Question'. */
@@ -534,24 +650,17 @@ export type QuestionPage = {
 
 export type Reading = {
   __typename?: 'Reading';
-  students: StudentPage;
+  created_by?: Maybe<Teacher>;
   discussion_questions: QuestionPage;
   /** The document's ID. */
   _id: Scalars['ID'];
-  teachers: TeacherPage;
+  vocabulary: VocabularyPage;
   reading_type: Supported_Readings;
   text: Scalars['String'];
-  vocab: VocabularyPage;
   title: Scalars['String'];
   reading_url?: Maybe<Scalars['String']>;
   /** The document's timestamp. */
   _ts: Scalars['Long'];
-};
-
-
-export type ReadingStudentsArgs = {
-  _size?: Maybe<Scalars['Int']>;
-  _cursor?: Maybe<Scalars['String']>;
 };
 
 
@@ -561,13 +670,7 @@ export type ReadingDiscussion_QuestionsArgs = {
 };
 
 
-export type ReadingTeachersArgs = {
-  _size?: Maybe<Scalars['Int']>;
-  _cursor?: Maybe<Scalars['String']>;
-};
-
-
-export type ReadingVocabArgs = {
+export type ReadingVocabularyArgs = {
   _size?: Maybe<Scalars['Int']>;
   _cursor?: Maybe<Scalars['String']>;
 };
@@ -577,6 +680,28 @@ export type ReadingPage = {
   __typename?: 'ReadingPage';
   /** The elements of type 'Reading' in this page. */
   data: Array<Maybe<Reading>>;
+  /** A cursor for elements coming after the current page. */
+  after?: Maybe<Scalars['String']>;
+  /** A cursor for elements coming before the current page. */
+  before?: Maybe<Scalars['String']>;
+};
+
+export type ReadingSession = {
+  __typename?: 'ReadingSession';
+  student?: Maybe<Student>;
+  teacher: Teacher;
+  /** The document's ID. */
+  _id: Scalars['ID'];
+  reading: Reading;
+  /** The document's timestamp. */
+  _ts: Scalars['Long'];
+};
+
+/** The pagination object for elements of type 'ReadingSession'. */
+export type ReadingSessionPage = {
+  __typename?: 'ReadingSessionPage';
+  /** The elements of type 'ReadingSession' in this page. */
+  data: Array<Maybe<ReadingSession>>;
   /** A cursor for elements coming after the current page. */
   after?: Maybe<Scalars['String']>;
   /** A cursor for elements coming before the current page. */
@@ -596,7 +721,7 @@ export type Student = {
   __typename?: 'Student';
   /** The document's ID. */
   _id: Scalars['ID'];
-  readings: ReadingPage;
+  reading_sessions: ReadingSessionPage;
   teachers: TeacherPage;
   account: Account;
   studies_languages: LanguagePage;
@@ -605,7 +730,7 @@ export type Student = {
 };
 
 
-export type StudentReadingsArgs = {
+export type StudentReading_SessionsArgs = {
   _size?: Maybe<Scalars['Int']>;
   _cursor?: Maybe<Scalars['String']>;
 };
@@ -620,6 +745,17 @@ export type StudentTeachersArgs = {
 export type StudentStudies_LanguagesArgs = {
   _size?: Maybe<Scalars['Int']>;
   _cursor?: Maybe<Scalars['String']>;
+};
+
+export type StudentAnswer = {
+  __typename?: 'StudentAnswer';
+  question: Question;
+  /** The document's ID. */
+  _id: Scalars['ID'];
+  answer?: Maybe<Scalars['String']>;
+  answered_by?: Maybe<Student>;
+  /** The document's timestamp. */
+  _ts: Scalars['Long'];
 };
 
 /** The pagination object for elements of type 'Student'. */
@@ -639,7 +775,7 @@ export type Teacher = {
   students: StudentPage;
   /** The document's ID. */
   _id: Scalars['ID'];
-  readings: ReadingPage;
+  reading_sessions?: Maybe<Array<Maybe<ReadingSession>>>;
   account: Account;
   /** The document's timestamp. */
   _ts: Scalars['Long'];
@@ -657,12 +793,6 @@ export type TeacherStudentsArgs = {
   _cursor?: Maybe<Scalars['String']>;
 };
 
-
-export type TeacherReadingsArgs = {
-  _size?: Maybe<Scalars['Int']>;
-  _cursor?: Maybe<Scalars['String']>;
-};
-
 /** The pagination object for elements of type 'Teacher'. */
 export type TeacherPage = {
   __typename?: 'TeacherPage';
@@ -676,9 +806,9 @@ export type TeacherPage = {
 
 export type Vocabulary = {
   __typename?: 'Vocabulary';
-  discussion_questions: ReadingPage;
   /** The document's ID. */
   _id: Scalars['ID'];
+  appears_in: ReadingPage;
   definition?: Maybe<Scalars['String']>;
   word: Scalars['String'];
   /** The document's timestamp. */
@@ -686,7 +816,7 @@ export type Vocabulary = {
 };
 
 
-export type VocabularyDiscussion_QuestionsArgs = {
+export type VocabularyAppears_InArgs = {
   _size?: Maybe<Scalars['Int']>;
   _cursor?: Maybe<Scalars['String']>;
 };
@@ -738,7 +868,25 @@ export type GetUserQuery = (
   & { getLoggedInUser: (
     { __typename?: 'Account' }
     & Pick<Account, 'email' | '_id' | 'firstName' | 'lastName'>
+    & { student?: Maybe<(
+      { __typename?: 'Student' }
+      & Pick<Student, '_id'>
+    )>, teacher?: Maybe<(
+      { __typename?: 'Teacher' }
+      & Pick<Teacher, '_id'>
+    )> }
   ) }
+);
+
+export type GetAllLanguagesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllLanguagesQuery = (
+  { __typename?: 'Query' }
+  & { getAllLanguages: Array<Maybe<(
+    { __typename?: 'Language' }
+    & Pick<Language, 'code' | 'display_string' | 'language_string'>
+  )>> }
 );
 
 
@@ -815,6 +963,12 @@ export const GetUserDocument = gql`
     _id
     firstName
     lastName
+    student {
+      _id
+    }
+    teacher {
+      _id
+    }
   }
 }
     `;
@@ -843,3 +997,37 @@ export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export const GetAllLanguagesDocument = gql`
+    query getAllLanguages {
+  getAllLanguages {
+    code
+    display_string
+    language_string
+  }
+}
+    `;
+
+/**
+ * __useGetAllLanguagesQuery__
+ *
+ * To run a query within a React component, call `useGetAllLanguagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllLanguagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllLanguagesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllLanguagesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllLanguagesQuery, GetAllLanguagesQueryVariables>) {
+        return Apollo.useQuery<GetAllLanguagesQuery, GetAllLanguagesQueryVariables>(GetAllLanguagesDocument, baseOptions);
+      }
+export function useGetAllLanguagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllLanguagesQuery, GetAllLanguagesQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllLanguagesQuery, GetAllLanguagesQueryVariables>(GetAllLanguagesDocument, baseOptions);
+        }
+export type GetAllLanguagesQueryHookResult = ReturnType<typeof useGetAllLanguagesQuery>;
+export type GetAllLanguagesLazyQueryHookResult = ReturnType<typeof useGetAllLanguagesLazyQuery>;
+export type GetAllLanguagesQueryResult = Apollo.QueryResult<GetAllLanguagesQuery, GetAllLanguagesQueryVariables>;

@@ -1,0 +1,4 @@
+CreateIndex({
+  name: "all_languages",
+  source: Collection('Language')
+})

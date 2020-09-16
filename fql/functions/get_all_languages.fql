@@ -1,0 +1,9 @@
+Query(
+  Lambda(
+    [],
+    Select(
+      "data",
+      Map(Paginate(Match(Index("all_languages"))), Lambda("X", Get(Var("X"))))
+    )
+  )
+)

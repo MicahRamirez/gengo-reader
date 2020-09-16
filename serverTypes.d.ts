@@ -43,6 +43,7 @@ export type AccountTeacherRelation = {
 export type LanguageInput = {
   code: Supported_Language_Code;
   display_string: Scalars['String'];
+  language_string: Scalars['String'];
   students?: Maybe<LanguageStudentsRelation>;
   teachers?: Maybe<LanguageTeachersRelation>;
 };
@@ -462,7 +463,7 @@ export type TeacherAccountRelation = {
 export type TeacherInput = {
   account?: Maybe<TeacherAccountRelation>;
   students?: Maybe<TeacherStudentsRelation>;
-  reading_sessions: Array<Maybe<Scalars['ID']>>;
+  reading_sessions?: Maybe<Array<Maybe<Scalars['ID']>>>;
   teaches_languages?: Maybe<TeacherTeaches_LanguagesRelation>;
 };
 
@@ -525,6 +526,7 @@ export type Language = {
   teachers: TeacherPage;
   code: Supported_Language_Code;
   display_string: Scalars['String'];
+  language_string: Scalars['String'];
   /** The document's timestamp. */
   _ts: Scalars['Long'];
 };
@@ -564,6 +566,7 @@ export type Query = {
   findQuestionByID?: Maybe<Question>;
   /** Find a document from the collection of 'Teacher' by its id. */
   findTeacherByID?: Maybe<Teacher>;
+  getAllLanguages: Array<Maybe<Language>>;
   getLoggedInUser: Account;
   /** Find a document from the collection of 'StudentAnswer' by its id. */
   findStudentAnswerByID?: Maybe<StudentAnswer>;
@@ -770,7 +773,7 @@ export type Teacher = {
   students: StudentPage;
   /** The document's ID. */
   _id: Scalars['ID'];
-  reading_sessions: Array<Maybe<ReadingSession>>;
+  reading_sessions?: Maybe<Array<Maybe<ReadingSession>>>;
   account: Account;
   /** The document's timestamp. */
   _ts: Scalars['Long'];

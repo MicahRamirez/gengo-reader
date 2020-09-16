@@ -4,7 +4,7 @@ import { AUTH_TOKEN } from "../lib/constants";
 import { useGetUserQuery, Account } from "../clientTypes";
 
 type AuthContext = {
-  user: Pick<Account, "email" | "_id" | "firstName" | "lastName"> | undefined;
+  user: Omit<Account, "_ts"> | undefined;
   setUser: (user: Account) => void;
   setUserToken: (token: string) => void;
   loadingUser: boolean;
@@ -20,9 +20,7 @@ export const AuthContext = React.createContext<AuthContext>({
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<
-    Pick<Account, "email" | "_id" | "firstName" | "lastName">
-  >();
+  const [user, setUser] = useState<Omit<Account, "_ts">>();
   const [userToken, setUserToken] = useState("");
 
   const { loading } = useGetUserQuery({

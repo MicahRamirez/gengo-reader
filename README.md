@@ -33,3 +33,7 @@ Uses Scrapy https://docs.scrapy.org/en/latest/
 ## Bootstrap Token Role Access
 
 1. Bootstrap token should have read, create access to Accounts, function access to login and register, read access to the unique_Accounts index
+
+## GQL Types
+
+Types are generated from the schema and the queries defined under src/queries, if you make changes to the schema or queries, the types need to be regenerated manually (for now)

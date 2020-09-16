@@ -1,0 +1,10 @@
+Create(
+  Collection('Language'),
+  {
+    data: {
+      code: 'JA',
+      display_string: 'Japanese',
+      language_string: '日本語'
+    }
+  }
+)

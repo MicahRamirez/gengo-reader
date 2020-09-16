@@ -7,10 +7,6 @@ enum SUPPORTED_LANGUAGE_CODE {
   JA
 }
 
-type Query {
-  getLoggedInUser: Account! @resolver
-}
-
 type Account {
   email: String! @unique
   firstName: String!
@@ -57,24 +53,30 @@ type Reading {
 
 type Teacher {
   account: Account! @relation(name: "teacher_account")
-  students: [Student]! @relation(name: "assigned_to")
-  reading_sessions: [ReadingSession]!
+  students: [Student] @relation(name: "assigned_to")
+  reading_sessions: [ReadingSession]
   teaches_languages: [Language]! @relation
 }
 
 type Student {
   account: Account! @relation(name: "student_account")
-  reading_sessions: [ReadingSession]!
+  reading_sessions: [ReadingSession]
   @relation(name: "student_readings_sessions")
-  teachers: [Teacher]! @relation(name: "assigned_to")
+  teachers: [Teacher] @relation(name: "assigned_to")
   studies_languages: [Language]! @relation
 }
 
 type Language {
-  code: SUPPORTED_LANGUAGE_CODE!
+  code: SUPPORTED_LANGUAGE_CODE! @unique
   display_string: String!
+  language_string: String!
   students: [Student]! @relation
   teachers: [Teacher]! @relation
+}
+
+type Query {
+  getLoggedInUser: Account! @resolver
+  getAllLanguages: [Language]! @resolver
 }
 
 type Mutation {
